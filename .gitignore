@@ -1,0 +1,6 @@
+# GoLand IDE
+.idea
+*.iml
+
+# Ignore vendoring for now
+vendor/
