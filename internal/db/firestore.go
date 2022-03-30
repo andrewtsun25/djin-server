@@ -11,7 +11,7 @@ import (
 	"log"
 )
 
-const ORGANIZATIONS = "organizations"
+const OrganizationsCollection = "organizations"
 
 type FirestoreDB struct {
 	client *firestore.Client
@@ -36,25 +36,24 @@ func (f *FirestoreDB) Close() error {
 	return f.client.Close()
 }
 
+// Organizations
+
 func (f *FirestoreDB) GetOrganizationById(ctx context.Context, id string) (*grpcEntity.Organization, error) {
-	dsnap, err := f.client.Collection(ORGANIZATIONS).Doc(id).Get(ctx)
+	docSnapshot, err := f.client.Collection(OrganizationsCollection).Doc(id).Get(ctx)
 	if err != nil {
 		return nil, err
 	}
-	organization := &dbEntity.Organization{}
-	if err = dsnap.DataTo(organization); err != nil {
+	dbOrganization := &dbEntity.Organization{}
+	if err = docSnapshot.DataTo(dbOrganization); err != nil {
 		return nil, err
 	}
-	if organization.LogoUrl == "" {
-		return &grpcEntity.Organization{
-			Id:      id,
-			Name:    organization.Name,
-			LogoUrl: nil,
-		}, nil
-	}
-	return &grpcEntity.Organization{
+	grpcOrganization := &grpcEntity.Organization{
 		Id:      id,
-		Name:    organization.Name,
-		LogoUrl: wrapperspb.String(organization.LogoUrl),
-	}, nil
+		Name:    dbOrganization.Name,
+		LogoUrl: nil,
+	}
+	if dbOrganization.LogoUrl != "" {
+		grpcOrganization.LogoUrl = wrapperspb.String(dbOrganization.LogoUrl)
+	}
+	return grpcOrganization, nil
 }

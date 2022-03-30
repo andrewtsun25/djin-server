@@ -29,6 +29,52 @@ func (s *djinServiceServerImpl) Close() error {
 	return s.firestoreDB.Close()
 }
 
+// Educations
+
+func (s *djinServiceServerImpl) ListEducationsByType(ctx context.Context, req *rpc.ListEducationsByTypeRequest) (*rpc.ListEducationsByTypeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListEducationsByType not implemented")
+}
+
+// Employments
+
+func (s *djinServiceServerImpl) ListEmployments(ctx context.Context, req *rpc.ListEmploymentsRequest) (*rpc.ListEmploymentsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListEmployments not implemented")
+}
+
+// HBV Research
+
+func (s *djinServiceServerImpl) ListHbvResearchPapers(ctx context.Context, req *rpc.ListHbvResearchPapersRequest) (*rpc.ListHbvResearchPapersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListHbvResearchPapers not implemented")
+}
+
+// Holistic Office
+
+func (s *djinServiceServerImpl) ListHolisticOfficeLinks(ctx context.Context, req *rpc.ListHolisticOfficeLinksRequest) (*rpc.ListHolisticOfficeLinksResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListHolisticOfficeLinks not implemented")
+}
+
+func (s *djinServiceServerImpl) ListHolisticOfficeModules(ctx context.Context, req *rpc.ListHolisticOfficeModulesRequest) (*rpc.ListHolisticOfficeModulesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListHolisticOfficeModules not implemented")
+}
+
+// Martial Arts
+
+func (s *djinServiceServerImpl) GetMartialArtsStyleById(ctx context.Context, req *rpc.GetMartialArtsStyleByIdRequest) (*rpc.GetMartialArtsStyleByIdResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMartialArtsStyleById not implemented")
+}
+
+// Music
+
+func (s *djinServiceServerImpl) ListInstruments(ctx context.Context, req *rpc.ListInstrumentsRequest) (*rpc.ListInstrumentsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListInstruments not implemented")
+}
+
+func (s *djinServiceServerImpl) ListMusicScores(ctx context.Context, req *rpc.ListMusicScoresRequest) (*rpc.ListMusicScoresResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListMusicScores not implemented")
+}
+
+// Organizations
+
 func (s *djinServiceServerImpl) GetOrganizationById(ctx context.Context, req *rpc.GetOrganizationByIdRequest) (*rpc.GetOrganizationByIdResponse, error) {
 	organization, err := s.firestoreDB.GetOrganizationById(ctx, req.GetId())
 	if err != nil {
@@ -39,30 +85,8 @@ func (s *djinServiceServerImpl) GetOrganizationById(ctx context.Context, req *rp
 	}, nil
 }
 
-func (s *djinServiceServerImpl) ListEducationsByType(ctx context.Context, req *rpc.ListEducationsByTypeRequest) (*rpc.ListEducationsByTypeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListEducationsByType not implemented")
-}
-func (s *djinServiceServerImpl) ListEmployments(ctx context.Context, req *rpc.ListEmploymentsRequest) (*rpc.ListEmploymentsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListEmployments not implemented")
-}
-func (s *djinServiceServerImpl) ListHbvResearchPapers(ctx context.Context, req *rpc.ListHbvResearchPapersRequest) (*rpc.ListHbvResearchPapersResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListHbvResearchPapers not implemented")
-}
-func (s *djinServiceServerImpl) ListHolisticOfficeLinks(ctx context.Context, req *rpc.ListHolisticOfficeLinksRequest) (*rpc.ListHolisticOfficeLinksResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListHolisticOfficeLinks not implemented")
-}
-func (s *djinServiceServerImpl) ListHolisticOfficeModules(ctx context.Context, req *rpc.ListHolisticOfficeModulesRequest) (*rpc.ListHolisticOfficeModulesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListHolisticOfficeModules not implemented")
-}
-func (s *djinServiceServerImpl) GetMartialArtsStyleById(ctx context.Context, req *rpc.GetMartialArtsStyleByIdRequest) (*rpc.GetMartialArtsStyleByIdResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetMartialArtsStyleById not implemented")
-}
-func (s *djinServiceServerImpl) ListInstruments(ctx context.Context, req *rpc.ListInstrumentsRequest) (*rpc.ListInstrumentsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListInstruments not implemented")
-}
-func (s *djinServiceServerImpl) ListMusicScores(ctx context.Context, req *rpc.ListMusicScoresRequest) (*rpc.ListMusicScoresResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListMusicScores not implemented")
-}
+// Projects
+
 func (s *djinServiceServerImpl) ListProjects(ctx context.Context, req *rpc.ListProjectsRequest) (*rpc.ListProjectsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListProjects not implemented")
 }
