@@ -22,13 +22,13 @@ func client_run() error {
 	connectTo := "127.0.0.1:8080"
 	conn, err := grpc.Dial(connectTo, grpc.WithBlock(), grpc.WithInsecure())
 	if err != nil {
-		return fmt.Errorf("failed to connect to PetStoreService on %s: %w", connectTo, err)
+		return fmt.Errorf("failed to connect to DjinService on %s: %w", connectTo, err)
 	}
 	log.Println("Connected to", connectTo)
 
 	djinClient := servicev1.NewDjinServiceClient(conn)
 	resp, err := djinClient.GetOrganizationById(context.Background(), &rpcv1.GetOrganizationByIdRequest{
-		Id: "id",
+		Id: "amazon",
 	})
 	if err != nil {
 		return fmt.Errorf("failed to GetOrganizationById: %w", err)
