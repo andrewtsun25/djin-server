@@ -5,7 +5,6 @@ import (
 	"context"
 	dbEntity "djin-server/internal/entity"
 	firebase "firebase.google.com/go"
-	"fmt"
 	grpcEntity "go.buf.build/grpc/go/andrewtsun25/djin/proto/dev/djin/entity/v1"
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
@@ -65,10 +64,6 @@ func (f *FirestoreDB) ListEducationsByType(ctx context.Context, eduType grpcEnti
 		if err != nil {
 			return []*grpcEntity.Education{}, nil
 		}
-		syllabusUrls := map[string]string{}
-		for key, value := range dbEducation.SyllabusUrls {
-			syllabusUrls[key] = fmt.Sprintf("%v", value)
-		}
 		grpcEducation := &grpcEntity.Education{
 			Id:                   educationDoc.Ref.ID,
 			Department:           nil,
@@ -81,7 +76,7 @@ func (f *FirestoreDB) ListEducationsByType(ctx context.Context, eduType grpcEnti
 			ResidentialCollege:   nil,
 			StartDate:            timestamppb.New(dbEducation.StartDate),
 			StudentOrganizations: studentOrganizations,
-			SyllabusUrls:         syllabusUrls,
+			SyllabusUrls:         dbEducation.SyllabusUrls,
 			Type:                 grpcEntity.EducationType(grpcEntity.EducationType_value[EducationDbTypeToProtoMap[dbEducation.Type]]),
 		}
 		grpcEducations = append(grpcEducations, grpcEducation)

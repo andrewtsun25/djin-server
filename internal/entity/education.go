@@ -15,6 +15,6 @@ type EducationEntity struct {
 	Organization       *firestore.DocumentRef `firebase:"organization"`
 	ResidentialCollege string                 `firebase:"residentialCollege"`
 	StartDate          time.Time              `firebase:"startDate"`
-	SyllabusUrls       map[string]interface{} `firebase:"syllabusUrls"`
+	SyllabusUrls       map[string]string      `firebase:"syllabusUrls"`
 	Type               string                 `firebase:"type"`
 }
