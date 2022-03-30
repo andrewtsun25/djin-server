@@ -32,7 +32,13 @@ func (s *djinServiceServerImpl) Close() error {
 // Educations
 
 func (s *djinServiceServerImpl) ListEducationsByType(ctx context.Context, req *rpc.ListEducationsByTypeRequest) (*rpc.ListEducationsByTypeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListEducationsByType not implemented")
+	educations, err := s.firestoreDB.ListEducationsByType(ctx, req.GetEducationType())
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.ListEducationsByTypeResponse{
+		Educations: educations,
+	}, nil
 }
 
 // Employments
