@@ -1,9 +1,9 @@
-package main
+package db
 
 import (
 	"cloud.google.com/go/firestore"
 	"context"
-	dbEntity "djin-server/src/entity"
+	dbEntity "djin-server/internal/entity"
 	firebase "firebase.google.com/go"
 	grpcEntity "go.buf.build/grpc/go/andrewtsun25/djin/proto/dev/djin/entity/v1"
 	"google.golang.org/api/option"

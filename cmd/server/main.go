@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"djin-server/internal/server"
 	"fmt"
 	servicev1 "go.buf.build/grpc/go/andrewtsun25/djin/proto/dev/djin/service/v1"
 	"google.golang.org/api/option"
@@ -9,10 +10,9 @@ import (
 	"log"
 	"net"
 	"os"
-	"path/filepath"
 )
 
-const SERVICE_ACCOUNT_JSON = "../resources/djin-dev-003b126063d6.json"
+const ServiceAccountJson = "configs/firebase/djin-dev-003b126063d6.json"
 
 func main() {
 	if err := run(); err != nil {
@@ -27,15 +27,11 @@ func run() error {
 		return fmt.Errorf("failed to listen on %s: %w", listenOn, err)
 	}
 	ctx := context.Background()
-	fileName, err := filepath.Abs(SERVICE_ACCOUNT_JSON)
-	if err != nil {
-		log.Printf("File does not exist @ %s", SERVICE_ACCOUNT_JSON)
+	serviceAccount := option.WithCredentialsFile(ServiceAccountJson)
+	if _, err := os.ReadFile(ServiceAccountJson); err != nil {
+		log.Printf("Cannot read from account: %s", ServiceAccountJson)
 	}
-	serviceAccount := option.WithCredentialsFile(fileName)
-	if _, err := os.ReadFile(fileName); err != nil {
-		log.Printf("Cannot read from account: %s", SERVICE_ACCOUNT_JSON)
-	}
-	djinServiceServer := NewDjinServiceServer(ctx, serviceAccount)
+	djinServiceServer := server.NewDjinServiceServer(ctx, serviceAccount)
 	grpcServer := grpc.NewServer()
 	servicev1.RegisterDjinServiceServer(grpcServer, djinServiceServer)
 	log.Println("Listening on", listenOn)

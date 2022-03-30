@@ -6,22 +6,16 @@ The server can be accessed under port `localhost:8080` when developing locally
 
 # Frequently used commands
 
-## Building the server
-Build an executable version of this server that can be run. 
-```go
-go build ./...
-```
-
 ## Running the server
 Run this server in listening mode.
 ```go
 go run ./...
 ```
 
-## Installing the server
-Install the server as an executable on your machine.
+## Formatting
+Auto-format all the code for this repository.
 ```go
-go install ./...
+go fmt ./...
 ```
 
 ## Tests 
