@@ -15,6 +15,7 @@ import (
 
 const (
 	EducationsCollection              = "educations"
+	EmploymentsCollection             = "employments"
 	OrganizationsCollection           = "organizations"
 	StudentOrganizationsSubCollection = "studentOrganizations"
 )
@@ -79,6 +80,12 @@ func (f *FirestoreDB) ListEducationsByType(ctx context.Context, eduType grpcEnti
 			SyllabusUrls:         dbEducation.SyllabusUrls,
 			Type:                 grpcEntity.EducationType(grpcEntity.EducationType_value[EducationDbTypeToProtoMap[dbEducation.Type]]),
 		}
+		if dbEducation.Department != "" {
+			grpcEducation.Department = wrapperspb.String(dbEducation.Department)
+		}
+		if dbEducation.ResidentialCollege != "" {
+			grpcEducation.ResidentialCollege = wrapperspb.String(dbEducation.ResidentialCollege)
+		}
 		grpcEducations = append(grpcEducations, grpcEducation)
 	}
 	return grpcEducations, nil
@@ -105,6 +112,43 @@ func (f *FirestoreDB) ListStudentOrganizationsForEducation(ctx context.Context, 
 		grpcStudentOrganizations = append(grpcStudentOrganizations, grpcStudentOrganization)
 	}
 	return grpcStudentOrganizations, nil
+}
+
+// Employments
+
+func (f *FirestoreDB) ListEmployments(ctx context.Context) ([]*grpcEntity.Employment, error) {
+	var grpcEmployments []*grpcEntity.Employment
+	iter := f.client.Collection(EmploymentsCollection).Documents(ctx)
+	for {
+		employmentDoc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		dbEmployment := &dbEntity.EmploymentEntity{}
+		if err = employmentDoc.DataTo(dbEmployment); err != nil {
+			return []*grpcEntity.Employment{}, err
+		}
+		organization, err := f.GetOrganizationById(ctx, dbEmployment.Organization.ID)
+		if err != nil {
+			return []*grpcEntity.Employment{}, err
+		}
+		grpcEmployment := &grpcEntity.Employment{
+			Id:               employmentDoc.Ref.ID,
+			Organization:     organization,
+			MediaUrl:         dbEmployment.MediaUrl,
+			Role:             dbEmployment.Role,
+			StartDate:        timestamppb.New(dbEmployment.StartDate),
+			EndDate:          timestamppb.New(dbEmployment.EndDate),
+			Description:      dbEmployment.Description,
+			Responsibilities: dbEmployment.Responsibilities,
+			Skills:           dbEmployment.Skills,
+			SkillTypes:       dbEmployment.SkillTypes,
+			Domains:          dbEmployment.Domains,
+			Type:             grpcEntity.Employment_JobType(grpcEntity.Employment_JobType_value[EmploymentDbTypeToProtoMap[dbEmployment.JobType]]),
+		}
+		grpcEmployments = append(grpcEmployments, grpcEmployment)
+	}
+	return grpcEmployments, nil
 }
 
 // Organizations

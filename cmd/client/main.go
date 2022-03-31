@@ -24,11 +24,12 @@ func clientRun() error {
 	}
 	log.Println("Connected to", connectTo)
 	djinServiceClient := service.NewDjinServiceClient(conn)
+	ctx := context.Background()
 
 	// Test ListEducationsByType
 
 	// Coding
-	listEdusResponse, err := djinServiceClient.ListEducationsByType(context.Background(), &rpc.ListEducationsByTypeRequest{
+	listEdusResponse, err := djinServiceClient.ListEducationsByType(ctx, &rpc.ListEducationsByTypeRequest{
 		EducationType: grpcEntity.EducationType_EDUCATION_TYPE_CODING,
 	})
 	if err != nil {
@@ -37,7 +38,7 @@ func clientRun() error {
 	log.Printf("[ListEducationsByType] Coding Educations: %v\n\n", listEdusResponse)
 
 	// Music
-	listEdusResponse, err = djinServiceClient.ListEducationsByType(context.Background(), &rpc.ListEducationsByTypeRequest{
+	listEdusResponse, err = djinServiceClient.ListEducationsByType(ctx, &rpc.ListEducationsByTypeRequest{
 		EducationType: grpcEntity.EducationType_EDUCATION_TYPE_MUSIC,
 	})
 	if err != nil {
@@ -45,8 +46,15 @@ func clientRun() error {
 	}
 	log.Printf("[ListEducationsByType] Music Educations: %v\n\n", listEdusResponse)
 
+	// Test ListEmployments
+	listEmploymentsResponse, err := djinServiceClient.ListEmployments(ctx, &rpc.ListEmploymentsRequest{})
+	if err != nil {
+		return fmt.Errorf("[ListEmployments] Failed to list employments: %w\n\n", err)
+	}
+	log.Printf("[ListEmployments] Employments: %v\n\n", listEmploymentsResponse)
+
 	// Test Get Organization
-	getOrgResponse, err := djinServiceClient.GetOrganizationById(context.Background(), &rpc.GetOrganizationByIdRequest{
+	getOrgResponse, err := djinServiceClient.GetOrganizationById(ctx, &rpc.GetOrganizationByIdRequest{
 		Id: "amazon",
 	})
 	if err != nil {

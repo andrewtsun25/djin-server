@@ -44,7 +44,13 @@ func (s *djinServiceServerImpl) ListEducationsByType(ctx context.Context, req *r
 // Employments
 
 func (s *djinServiceServerImpl) ListEmployments(ctx context.Context, req *rpc.ListEmploymentsRequest) (*rpc.ListEmploymentsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListEmployments not implemented")
+	employments, err := s.firestoreDB.ListEmployments(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.ListEmploymentsResponse{
+		Employments: employments,
+	}, nil
 }
 
 // HBV Research
