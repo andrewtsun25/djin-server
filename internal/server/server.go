@@ -43,7 +43,7 @@ func (s *djinServiceServerImpl) ListEducationsByType(ctx context.Context, req *r
 
 // Employments
 
-func (s *djinServiceServerImpl) ListEmployments(ctx context.Context, req *rpc.ListEmploymentsRequest) (*rpc.ListEmploymentsResponse, error) {
+func (s *djinServiceServerImpl) ListEmployments(ctx context.Context, _ *rpc.ListEmploymentsRequest) (*rpc.ListEmploymentsResponse, error) {
 	employments, err := s.firestoreDB.ListEmployments(ctx)
 	if err != nil {
 		return nil, err
@@ -53,10 +53,16 @@ func (s *djinServiceServerImpl) ListEmployments(ctx context.Context, req *rpc.Li
 	}, nil
 }
 
-// HBV Research
+// HBV Research Papers
 
-func (s *djinServiceServerImpl) ListHbvResearchPapers(ctx context.Context, req *rpc.ListHbvResearchPapersRequest) (*rpc.ListHbvResearchPapersResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListHbvResearchPapers not implemented")
+func (s *djinServiceServerImpl) ListHbvResearchPapers(ctx context.Context, _ *rpc.ListHbvResearchPapersRequest) (*rpc.ListHbvResearchPapersResponse, error) {
+	hbvResearchPapers, err := s.firestoreDB.ListHbvResearchPapers(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.ListHbvResearchPapersResponse{
+		HbvResearchPapers: hbvResearchPapers,
+	}, nil
 }
 
 // Holistic Office

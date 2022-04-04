@@ -16,6 +16,7 @@ import (
 const (
 	EducationsCollection              = "educations"
 	EmploymentsCollection             = "employments"
+	HbvResearchPapersCollection       = "hbvResearchPapers"
 	OrganizationsCollection           = "organizations"
 	StudentOrganizationsSubCollection = "studentOrganizations"
 )
@@ -134,21 +135,56 @@ func (f *FirestoreDB) ListEmployments(ctx context.Context) ([]*grpcEntity.Employ
 		}
 		grpcEmployment := &grpcEntity.Employment{
 			Id:               employmentDoc.Ref.ID,
-			Organization:     organization,
-			MediaUrl:         dbEmployment.MediaUrl,
-			Role:             dbEmployment.Role,
-			StartDate:        timestamppb.New(dbEmployment.StartDate),
-			EndDate:          timestamppb.New(dbEmployment.EndDate),
 			Description:      dbEmployment.Description,
+			Domains:          dbEmployment.Domains,
+			EndDate:          timestamppb.New(dbEmployment.EndDate),
+			MediaUrl:         dbEmployment.MediaUrl,
+			Organization:     organization,
 			Responsibilities: dbEmployment.Responsibilities,
+			Role:             dbEmployment.Role,
 			Skills:           dbEmployment.Skills,
 			SkillTypes:       dbEmployment.SkillTypes,
-			Domains:          dbEmployment.Domains,
+			StartDate:        timestamppb.New(dbEmployment.StartDate),
 			Type:             grpcEntity.Employment_JobType(grpcEntity.Employment_JobType_value[EmploymentDbTypeToProtoMap[dbEmployment.JobType]]),
 		}
 		grpcEmployments = append(grpcEmployments, grpcEmployment)
 	}
 	return grpcEmployments, nil
+}
+
+// ListHBVResearchPapers
+
+func (f *FirestoreDB) ListHbvResearchPapers(ctx context.Context) ([]*grpcEntity.HbvResearchPaper, error) {
+	var grpcHbvResearchPapers []*grpcEntity.HbvResearchPaper
+	iter := f.client.Collection(HbvResearchPapersCollection).Documents(ctx)
+	for {
+		hbvResearchDoc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		dbHbvResearchPaper := &dbEntity.HbvResearchPaperEntity{}
+		if err = hbvResearchDoc.DataTo(dbHbvResearchPaper); err != nil {
+			return []*grpcEntity.HbvResearchPaper{}, err
+		}
+		organization, err := f.GetOrganizationById(ctx, dbHbvResearchPaper.Organization.ID)
+		if err != nil {
+			return []*grpcEntity.HbvResearchPaper{}, err
+		}
+		grpcHbvResearchPaper := &grpcEntity.HbvResearchPaper{
+			Id:               hbvResearchDoc.Ref.ID,
+			Description:      dbHbvResearchPaper.Description,
+			EndDate:          timestamppb.New(dbHbvResearchPaper.EndDate),
+			MediaUrl:         dbHbvResearchPaper.MediaUrl,
+			Name:             dbHbvResearchPaper.Name,
+			Organization:     organization,
+			PaperUrl:         dbHbvResearchPaper.PaperUrl,
+			Responsibilities: dbHbvResearchPaper.Responsibilities,
+			Skills:           dbHbvResearchPaper.Skills,
+			StartDate:        timestamppb.New(dbHbvResearchPaper.StartDate),
+		}
+		grpcHbvResearchPapers = append(grpcHbvResearchPapers, grpcHbvResearchPaper)
+	}
+	return grpcHbvResearchPapers, nil
 }
 
 // Organizations
@@ -164,8 +200,8 @@ func (f *FirestoreDB) GetOrganizationById(ctx context.Context, id string) (*grpc
 	}
 	grpcOrganization := &grpcEntity.Organization{
 		Id:      organizationDoc.Ref.ID,
-		Name:    dbOrganization.Name,
 		LogoUrl: nil,
+		Name:    dbOrganization.Name,
 	}
 	if dbOrganization.LogoUrl != "" {
 		grpcOrganization.LogoUrl = wrapperspb.String(dbOrganization.LogoUrl)

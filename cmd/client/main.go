@@ -37,7 +37,7 @@ func clientRun() error {
 	}
 	log.Printf("[ListEducationsByType] Coding Educations: %v\n\n", listEdusResponse)
 
-	// Music
+	// Educations
 	listEdusResponse, err = djinServiceClient.ListEducationsByType(ctx, &rpc.ListEducationsByTypeRequest{
 		EducationType: grpcEntity.EducationType_EDUCATION_TYPE_MUSIC,
 	})
@@ -46,14 +46,21 @@ func clientRun() error {
 	}
 	log.Printf("[ListEducationsByType] Music Educations: %v\n\n", listEdusResponse)
 
-	// Test ListEmployments
+	// Employments
 	listEmploymentsResponse, err := djinServiceClient.ListEmployments(ctx, &rpc.ListEmploymentsRequest{})
 	if err != nil {
 		return fmt.Errorf("[ListEmployments] Failed to list employments: %w\n\n", err)
 	}
 	log.Printf("[ListEmployments] Employments: %v\n\n", listEmploymentsResponse)
 
-	// Test Get Organization
+	// HbvResearchPapers
+	hbvResearchPapersResponse, err := djinServiceClient.ListHbvResearchPapers(ctx, &rpc.ListHbvResearchPapersRequest{})
+	if err != nil {
+		return fmt.Errorf("[ListHbvResearchPapers] Failed to list research papers: %w\n\n", err)
+	}
+	log.Printf("[ListHbvResearchPapers] HbvResearchPapers: %v\n\n", hbvResearchPapersResponse)
+
+	// Organizations
 	getOrgResponse, err := djinServiceClient.GetOrganizationById(ctx, &rpc.GetOrganizationByIdRequest{
 		Id: "amazon",
 	})

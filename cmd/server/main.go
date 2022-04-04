@@ -12,6 +12,7 @@ import (
 )
 
 const ServiceAccountJson = "configs/firebase/djin-dev-003b126063d6.json"
+const PortAddress = "127.0.0.1:8080"
 
 func main() {
 	if err := run(); err != nil {
@@ -20,10 +21,9 @@ func main() {
 }
 
 func run() error {
-	listenOn := "127.0.0.1:8080"
-	listener, err := net.Listen("tcp", listenOn)
+	listener, err := net.Listen("tcp", PortAddress)
 	if err != nil {
-		return fmt.Errorf("failed to listen on %s: %w", listenOn, err)
+		return fmt.Errorf("failed to listen on %s: %w", PortAddress, err)
 	}
 	ctx := context.Background()
 	serviceAccount := option.WithCredentialsFile(ServiceAccountJson)
@@ -36,7 +36,7 @@ func run() error {
 	}()
 	grpcServer := grpc.NewServer()
 	service.RegisterDjinServiceServer(grpcServer, djinServiceServer)
-	log.Println("Listening on", listenOn)
+	log.Println("Listening on", PortAddress)
 	if err := grpcServer.Serve(listener); err != nil {
 		return fmt.Errorf("failed to serve gRPC server: %w", err)
 	}
