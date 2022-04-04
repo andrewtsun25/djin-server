@@ -67,8 +67,14 @@ func (s *djinServiceServerImpl) ListHbvResearchPapers(ctx context.Context, _ *rp
 
 // Holistic Office
 
-func (s *djinServiceServerImpl) ListHolisticOfficeLinks(ctx context.Context, req *rpc.ListHolisticOfficeLinksRequest) (*rpc.ListHolisticOfficeLinksResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListHolisticOfficeLinks not implemented")
+func (s *djinServiceServerImpl) ListHolisticOfficeLinks(ctx context.Context, _ *rpc.ListHolisticOfficeLinksRequest) (*rpc.ListHolisticOfficeLinksResponse, error) {
+	holisticOfficeLinks, err := s.firestoreDB.ListHolisticOfficeLinks(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.ListHolisticOfficeLinksResponse{
+		HolisticOfficeLinks: holisticOfficeLinks,
+	}, nil
 }
 
 func (s *djinServiceServerImpl) ListHolisticOfficeModules(ctx context.Context, req *rpc.ListHolisticOfficeModulesRequest) (*rpc.ListHolisticOfficeModulesResponse, error) {
@@ -81,7 +87,7 @@ func (s *djinServiceServerImpl) GetMartialArtsStyleById(ctx context.Context, req
 	return nil, status.Errorf(codes.Unimplemented, "method GetMartialArtsStyleById not implemented")
 }
 
-// Music
+// Education_Music
 
 func (s *djinServiceServerImpl) ListInstruments(ctx context.Context, req *rpc.ListInstrumentsRequest) (*rpc.ListInstrumentsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListInstruments not implemented")

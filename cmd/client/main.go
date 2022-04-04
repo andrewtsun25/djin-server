@@ -26,9 +26,7 @@ func clientRun() error {
 	djinServiceClient := service.NewDjinServiceClient(conn)
 	ctx := context.Background()
 
-	// Test ListEducationsByType
-
-	// Coding
+	// Coding Educations
 	listEdusResponse, err := djinServiceClient.ListEducationsByType(ctx, &rpc.ListEducationsByTypeRequest{
 		EducationType: grpcEntity.EducationType_EDUCATION_TYPE_CODING,
 	})
@@ -37,7 +35,7 @@ func clientRun() error {
 	}
 	log.Printf("[ListEducationsByType] Coding Educations: %v\n\n", listEdusResponse)
 
-	// Educations
+	// Music Educations
 	listEdusResponse, err = djinServiceClient.ListEducationsByType(ctx, &rpc.ListEducationsByTypeRequest{
 		EducationType: grpcEntity.EducationType_EDUCATION_TYPE_MUSIC,
 	})
@@ -59,6 +57,13 @@ func clientRun() error {
 		return fmt.Errorf("[ListHbvResearchPapers] Failed to list research papers: %w\n\n", err)
 	}
 	log.Printf("[ListHbvResearchPapers] HbvResearchPapers: %v\n\n", hbvResearchPapersResponse)
+
+	// Holistic Office
+	holisticOfficeLinksResponse, err := djinServiceClient.ListHolisticOfficeLinks(ctx, &rpc.ListHolisticOfficeLinksRequest{})
+	if err != nil {
+		return fmt.Errorf("[ListHolisticOfficeLinks] Failed to list Holistic Office links: %w\n\n", err)
+	}
+	log.Printf("[ListHolisticOfficeLinks] Holistic Office Links: %v\n\n", holisticOfficeLinksResponse)
 
 	// Organizations
 	getOrgResponse, err := djinServiceClient.GetOrganizationById(ctx, &rpc.GetOrganizationByIdRequest{

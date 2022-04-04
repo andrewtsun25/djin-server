@@ -17,6 +17,7 @@ const (
 	EducationsCollection              = "educations"
 	EmploymentsCollection             = "employments"
 	HbvResearchPapersCollection       = "hbvResearchPapers"
+	HolisticOfficeLinksCollection     = "holisticOfficeLinks"
 	OrganizationsCollection           = "organizations"
 	StudentOrganizationsSubCollection = "studentOrganizations"
 )
@@ -185,6 +186,31 @@ func (f *FirestoreDB) ListHbvResearchPapers(ctx context.Context) ([]*grpcEntity.
 		grpcHbvResearchPapers = append(grpcHbvResearchPapers, grpcHbvResearchPaper)
 	}
 	return grpcHbvResearchPapers, nil
+}
+
+// Holistic Office
+
+func (f *FirestoreDB) ListHolisticOfficeLinks(ctx context.Context) ([]*grpcEntity.HolisticOfficeLink, error) {
+	var grpcHolisticOfficeLinks []*grpcEntity.HolisticOfficeLink
+	iter := f.client.Collection(HolisticOfficeLinksCollection).Documents(ctx)
+	for {
+		holisticOfficeLinkDoc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		dbHolisticOfficeLink := &dbEntity.HolisticOfficeLink{}
+		if err = holisticOfficeLinkDoc.DataTo(dbHolisticOfficeLink); err != nil {
+			return []*grpcEntity.HolisticOfficeLink{}, err
+		}
+		grpcHolisticOfficeLink := &grpcEntity.HolisticOfficeLink{
+			Id:   holisticOfficeLinkDoc.Ref.ID,
+			Name: dbHolisticOfficeLink.Name,
+			Type: grpcEntity.HolisticOfficeLink_HolisticOfficeLinkType(grpcEntity.HolisticOfficeLink_HolisticOfficeLinkType_value[HolisticOffficeLinkDbTypeToProtoMap[dbHolisticOfficeLink.Type]]),
+			Url:  dbHolisticOfficeLink.Url,
+		}
+		grpcHolisticOfficeLinks = append(grpcHolisticOfficeLinks, grpcHolisticOfficeLink)
+	}
+	return grpcHolisticOfficeLinks, nil
 }
 
 // Organizations
