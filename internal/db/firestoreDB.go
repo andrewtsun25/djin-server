@@ -18,6 +18,7 @@ const (
 	EmploymentsCollection             = "employments"
 	HbvResearchPapersCollection       = "hbvResearchPapers"
 	HolisticOfficeLinksCollection     = "holisticOfficeLinks"
+	HolisticOfficeModulesCollection   = "holisticOfficeModules"
 	OrganizationsCollection           = "organizations"
 	StudentOrganizationsSubCollection = "studentOrganizations"
 )
@@ -198,7 +199,7 @@ func (f *FirestoreDB) ListHolisticOfficeLinks(ctx context.Context) ([]*grpcEntit
 		if err == iterator.Done {
 			break
 		}
-		dbHolisticOfficeLink := &dbEntity.HolisticOfficeLink{}
+		dbHolisticOfficeLink := &dbEntity.HolisticOfficeLinkEntity{}
 		if err = holisticOfficeLinkDoc.DataTo(dbHolisticOfficeLink); err != nil {
 			return []*grpcEntity.HolisticOfficeLink{}, err
 		}
@@ -211,6 +212,28 @@ func (f *FirestoreDB) ListHolisticOfficeLinks(ctx context.Context) ([]*grpcEntit
 		grpcHolisticOfficeLinks = append(grpcHolisticOfficeLinks, grpcHolisticOfficeLink)
 	}
 	return grpcHolisticOfficeLinks, nil
+}
+
+func (f *FirestoreDB) ListHolisticOfficeModules(ctx context.Context) ([]*grpcEntity.HolisticOfficeModule, error) {
+	var grpcHolisticOfficeModules []*grpcEntity.HolisticOfficeModule
+	iter := f.client.Collection(HolisticOfficeModulesCollection).Documents(ctx)
+	for {
+		holisticOfficeModuleDoc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		dbHolisticOfficeModule := &dbEntity.HolisticOfficeModuleEntity{}
+		if err = holisticOfficeModuleDoc.DataTo(dbHolisticOfficeModule); err != nil {
+			return []*grpcEntity.HolisticOfficeModule{}, err
+		}
+		grpcHolisticOfficeModule := &grpcEntity.HolisticOfficeModule{
+			Id:         holisticOfficeModuleDoc.Ref.ID,
+			Components: dbHolisticOfficeModule.Components,
+			Name:       dbHolisticOfficeModule.Name,
+		}
+		grpcHolisticOfficeModules = append(grpcHolisticOfficeModules, grpcHolisticOfficeModule)
+	}
+	return grpcHolisticOfficeModules, nil
 }
 
 // Organizations

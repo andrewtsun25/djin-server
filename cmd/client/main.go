@@ -52,18 +52,24 @@ func clientRun() error {
 	log.Printf("[ListEmployments] Employments: %v\n\n", listEmploymentsResponse)
 
 	// HbvResearchPapers
-	hbvResearchPapersResponse, err := djinServiceClient.ListHbvResearchPapers(ctx, &rpc.ListHbvResearchPapersRequest{})
+	listHbvResearchPapersResponse, err := djinServiceClient.ListHbvResearchPapers(ctx, &rpc.ListHbvResearchPapersRequest{})
 	if err != nil {
-		return fmt.Errorf("[ListHbvResearchPapers] Failed to list research papers: %w\n\n", err)
+		return fmt.Errorf("[ListHbvResearchPapers] Failed to list HBV research papers: %w\n\n", err)
 	}
-	log.Printf("[ListHbvResearchPapers] HbvResearchPapers: %v\n\n", hbvResearchPapersResponse)
+	log.Printf("[ListHbvResearchPapers] HBV research papers: %v\n\n", listHbvResearchPapersResponse)
 
 	// Holistic Office
-	holisticOfficeLinksResponse, err := djinServiceClient.ListHolisticOfficeLinks(ctx, &rpc.ListHolisticOfficeLinksRequest{})
+	listHolisticOfficeLinksResponse, err := djinServiceClient.ListHolisticOfficeLinks(ctx, &rpc.ListHolisticOfficeLinksRequest{})
 	if err != nil {
 		return fmt.Errorf("[ListHolisticOfficeLinks] Failed to list Holistic Office links: %w\n\n", err)
 	}
-	log.Printf("[ListHolisticOfficeLinks] Holistic Office Links: %v\n\n", holisticOfficeLinksResponse)
+	log.Printf("[ListHolisticOfficeLinks] Holistic Office links: %v\n\n", listHolisticOfficeLinksResponse)
+
+	listHolisticOfficeModulesResponse, err := djinServiceClient.ListHolisticOfficeModules(ctx, &rpc.ListHolisticOfficeModulesRequest{})
+	if err != nil {
+		return fmt.Errorf("[ListHolisticOfficeModules] Failed to list Holistic Office modules: %w\n\n", err)
+	}
+	log.Printf("[ListHolisticOfficeModules] Holistic Office modules: %v\n\n", listHolisticOfficeModulesResponse)
 
 	// Organizations
 	getOrgResponse, err := djinServiceClient.GetOrganizationById(ctx, &rpc.GetOrganizationByIdRequest{
