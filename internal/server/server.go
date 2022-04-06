@@ -101,8 +101,14 @@ func (s *djinServiceServerImpl) GetMartialArtsStyleById(ctx context.Context, req
 
 // Music
 
-func (s *djinServiceServerImpl) ListInstruments(ctx context.Context, req *rpc.ListInstrumentsRequest) (*rpc.ListInstrumentsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListInstruments not implemented")
+func (s *djinServiceServerImpl) ListInstruments(ctx context.Context, _ *rpc.ListInstrumentsRequest) (*rpc.ListInstrumentsResponse, error) {
+	instruments, err := s.firestoreDB.ListMusicInstruments(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.ListInstrumentsResponse{
+		Instruments: instruments,
+	}, nil
 }
 
 func (s *djinServiceServerImpl) ListMusicScores(ctx context.Context, req *rpc.ListMusicScoresRequest) (*rpc.ListMusicScoresResponse, error) {

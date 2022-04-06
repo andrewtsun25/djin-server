@@ -19,8 +19,9 @@ const (
 	HbvResearchPapersCollection       = "hbvResearchPapers"
 	HolisticOfficeLinksCollection     = "holisticOfficeLinks"
 	HolisticOfficeModulesCollection   = "holisticOfficeModules"
-	MartialArtsStylesCollection       = "martialArtsStyles"
 	MartialArtsStudiosCollection      = "martialArtsStudios"
+	MartialArtsStylesCollection       = "martialArtsStyles"
+	MusicInstrumentsCollection        = "musicInstruments"
 	OrganizationsCollection           = "organizations"
 	StudentOrganizationsSubCollection = "studentOrganizations"
 )
@@ -291,6 +292,30 @@ func (f *FirestoreDB) GetMartialArtsStudioById(ctx context.Context, id string) (
 		JoinDate:  timestamppb.New(dbMartialArtsStudio.JoinDate),
 	}
 	return grpcMartialArtsStudio, nil
+}
+
+// Music
+
+func (f *FirestoreDB) ListMusicInstruments(ctx context.Context) ([]*grpcEntity.Instrument, error) {
+	var grpcInstruments []*grpcEntity.Instrument
+	iter := f.client.Collection(MusicInstrumentsCollection).Documents(ctx)
+	for {
+		musicInstrumentDoc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		dbMusicInstrument := &dbEntity.MusicInstrumentEntity{}
+		if err = musicInstrumentDoc.DataTo(dbMusicInstrument); err != nil {
+			return []*grpcEntity.Instrument{}, err
+		}
+		grpcInstrument := &grpcEntity.Instrument{
+			Id:       musicInstrumentDoc.Ref.ID,
+			MediaUrl: dbMusicInstrument.MediaUrl,
+			Name:     dbMusicInstrument.Name,
+		}
+		grpcInstruments = append(grpcInstruments, grpcInstrument)
+	}
+	return grpcInstruments, nil
 }
 
 // Organizations

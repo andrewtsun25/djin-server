@@ -86,6 +86,13 @@ func clientRun() error {
 		log.Printf("[GetMartialArtsStyleById] Martial Arts Style for id '%s': %v\n\n", martialArtsStyle, getMartialArtsStyleByIdResponse)
 	}
 
+	// Music
+	listInstrumentsResponse, err := djinServiceClient.ListInstruments(ctx, &rpc.ListInstrumentsRequest{})
+	if err != nil {
+		return fmt.Errorf("[ListInstruments] Failed to list music instruments: %w\n\n", err)
+	}
+	log.Printf("[ListInstruments] Music Instruments : %v\n\n", listInstrumentsResponse)
+
 	// Organizations
 	getOrganizationByIdResponse, err := djinServiceClient.GetOrganizationById(ctx, &rpc.GetOrganizationByIdRequest{
 		Id: "amazon",
