@@ -19,6 +19,8 @@ const (
 	HbvResearchPapersCollection       = "hbvResearchPapers"
 	HolisticOfficeLinksCollection     = "holisticOfficeLinks"
 	HolisticOfficeModulesCollection   = "holisticOfficeModules"
+	MartialArtsStylesCollection       = "martialArtsStyles"
+	MartialArtsStudiosCollection      = "martialArtsStudios"
 	OrganizationsCollection           = "organizations"
 	StudentOrganizationsSubCollection = "studentOrganizations"
 )
@@ -234,6 +236,61 @@ func (f *FirestoreDB) ListHolisticOfficeModules(ctx context.Context) ([]*grpcEnt
 		grpcHolisticOfficeModules = append(grpcHolisticOfficeModules, grpcHolisticOfficeModule)
 	}
 	return grpcHolisticOfficeModules, nil
+}
+
+// Martial Arts
+
+func (f *FirestoreDB) GetMartialArtsStyleById(ctx context.Context, id string) (*grpcEntity.MartialArtsStyle, error) {
+	martialArtsStyleDoc, err := f.client.Collection(MartialArtsStylesCollection).Doc(id).Get(ctx)
+	if err != nil {
+		return nil, err
+	}
+	dbMartialArtsStyle := &dbEntity.MartialArtsStyleEntity{}
+	if err = martialArtsStyleDoc.DataTo(dbMartialArtsStyle); err != nil {
+		return nil, err
+	}
+	var studios []*grpcEntity.MartialArtsStudio
+	for _, studioRef := range dbMartialArtsStyle.Studios {
+		studioId := studioRef.ID
+		studio, err := f.GetMartialArtsStudioById(ctx, studioId)
+		if err != nil {
+			return nil, err
+		}
+		studios = append(studios, studio)
+	}
+	grpcMartialArtsStyle := &grpcEntity.MartialArtsStyle{
+		Id:                  martialArtsStyleDoc.Ref.ID,
+		BiographyParagraphs: dbMartialArtsStyle.Biography,
+		BlackBeltRank:       dbMartialArtsStyle.BlackBeltRank,
+		Description:         dbMartialArtsStyle.Description,
+		LogoUrl:             dbMartialArtsStyle.LogoUrl,
+		MediaCaption:        dbMartialArtsStyle.MediaCaption,
+		MediaUrl:            dbMartialArtsStyle.MediaUrl,
+		Name:                dbMartialArtsStyle.Name,
+		Studios:             studios,
+		Type:                grpcEntity.MartialArtsStyle_MartialArtsStyleType(grpcEntity.MartialArtsStyle_MartialArtsStyleType_value[MartialArtsStyleTypeDbTypeToProtoMap[dbMartialArtsStyle.Type]]),
+	}
+	return grpcMartialArtsStyle, nil
+}
+
+func (f *FirestoreDB) GetMartialArtsStudioById(ctx context.Context, id string) (*grpcEntity.MartialArtsStudio, error) {
+	martialArtsStudioDoc, err := f.client.Collection(MartialArtsStudiosCollection).Doc(id).Get(ctx)
+	if err != nil {
+		return nil, err
+	}
+	dbMartialArtsStudio := &dbEntity.MartialArtsStudioEntity{}
+	if err = martialArtsStudioDoc.DataTo(dbMartialArtsStudio); err != nil {
+		return nil, err
+	}
+	grpcMartialArtsStudio := &grpcEntity.MartialArtsStudio{
+		Id:        "",
+		Name:      dbMartialArtsStudio.Name,
+		LogoUrl:   dbMartialArtsStudio.LogoUrl,
+		StudioUrl: dbMartialArtsStudio.StudioUrl,
+		City:      dbMartialArtsStudio.City,
+		JoinDate:  timestamppb.New(dbMartialArtsStudio.JoinDate),
+	}
+	return grpcMartialArtsStudio, nil
 }
 
 // Organizations

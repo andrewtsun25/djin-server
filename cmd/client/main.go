@@ -10,6 +10,10 @@ import (
 	"log"
 )
 
+var (
+	martialArtsStyles = []string{"hdgd", "itfTkd", "wtTkd"}
+)
+
 func main() {
 	if err := clientRun(); err != nil {
 		log.Fatal(err)
@@ -71,14 +75,25 @@ func clientRun() error {
 	}
 	log.Printf("[ListHolisticOfficeModules] Holistic Office modules: %v\n\n", listHolisticOfficeModulesResponse)
 
+	// Martial Arts Styles
+	for _, martialArtsStyle := range martialArtsStyles {
+		getMartialArtsStyleByIdResponse, err := djinServiceClient.GetMartialArtsStyleById(ctx, &rpc.GetMartialArtsStyleByIdRequest{
+			Id: martialArtsStyle,
+		})
+		if err != nil {
+			return fmt.Errorf("[GetMartialArtsStyleById] Failed to list martial arts style for id '%s': %w\n\n", martialArtsStyle, err)
+		}
+		log.Printf("[GetMartialArtsStyleById] Martial Arts Style for id '%s': %v\n\n", martialArtsStyle, getMartialArtsStyleByIdResponse)
+	}
+
 	// Organizations
-	getOrgResponse, err := djinServiceClient.GetOrganizationById(ctx, &rpc.GetOrganizationByIdRequest{
+	getOrganizationByIdResponse, err := djinServiceClient.GetOrganizationById(ctx, &rpc.GetOrganizationByIdRequest{
 		Id: "amazon",
 	})
 	if err != nil {
 		return fmt.Errorf("[GetOrganizationById] Failed to get organization 'amazon': %w", err)
 	}
-	log.Printf("[GetOrganizationById] Organization 'amazon': %v\n\n", getOrgResponse)
+	log.Printf("[GetOrganizationById] Organization 'amazon': %v\n\n", getOrganizationByIdResponse)
 
 	return nil
 }

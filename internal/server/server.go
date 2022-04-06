@@ -90,7 +90,13 @@ func (s *djinServiceServerImpl) ListHolisticOfficeModules(ctx context.Context, _
 // Martial Arts
 
 func (s *djinServiceServerImpl) GetMartialArtsStyleById(ctx context.Context, req *rpc.GetMartialArtsStyleByIdRequest) (*rpc.GetMartialArtsStyleByIdResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetMartialArtsStyleById not implemented")
+	martialArtsStyle, err := s.firestoreDB.GetMartialArtsStyleById(ctx, req.GetId())
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.GetMartialArtsStyleByIdResponse{
+		MartialArtsStyle: martialArtsStyle,
+	}, nil
 }
 
 // Music
