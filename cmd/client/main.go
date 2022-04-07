@@ -108,5 +108,12 @@ func clientRun() error {
 	}
 	log.Printf("[GetOrganizationById] Organization 'amazon': %v\n\n", getOrganizationByIdResponse)
 
+	// Projects
+	listProjectsResponse, err := djinServiceClient.ListProjects(ctx, &rpc.ListProjectsRequest{})
+	if err != nil {
+		return fmt.Errorf("[ListProjects] Failed to list projects: %w\n\n", err)
+	}
+	log.Printf("[ListProjects] Projects : %v\n\n", listProjectsResponse)
+
 	return nil
 }

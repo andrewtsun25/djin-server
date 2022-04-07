@@ -6,8 +6,6 @@ import (
 	rpc "go.buf.build/grpc/go/andrewtsun25/djin/proto/dev/djin/rpc/v1"
 	service "go.buf.build/grpc/go/andrewtsun25/djin/proto/dev/djin/service/v1"
 	"google.golang.org/api/option"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type djinServiceServerImpl struct {
@@ -136,5 +134,11 @@ func (s *djinServiceServerImpl) GetOrganizationById(ctx context.Context, req *rp
 // Projects
 
 func (s *djinServiceServerImpl) ListProjects(ctx context.Context, req *rpc.ListProjectsRequest) (*rpc.ListProjectsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListProjects not implemented")
+	projects, err := s.firestoreDB.ListProjects(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.ListProjectsResponse{
+		Projects: projects,
+	}, nil
 }

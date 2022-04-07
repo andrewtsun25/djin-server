@@ -24,6 +24,7 @@ const (
 	MusicInstrumentsCollection        = "musicInstruments"
 	MusicScoresCollection             = "musicScores"
 	OrganizationsCollection           = "organizations"
+	ProjectsCollection                = "projects"
 	StudentOrganizationsSubCollection = "studentOrganizations"
 )
 
@@ -286,11 +287,11 @@ func (f *FirestoreDB) GetMartialArtsStudioById(ctx context.Context, id string) (
 	}
 	grpcMartialArtsStudio := &grpcEntity.MartialArtsStudio{
 		Id:        "",
-		Name:      dbMartialArtsStudio.Name,
-		LogoUrl:   dbMartialArtsStudio.LogoUrl,
-		StudioUrl: dbMartialArtsStudio.StudioUrl,
 		City:      dbMartialArtsStudio.City,
 		JoinDate:  timestamppb.New(dbMartialArtsStudio.JoinDate),
+		LogoUrl:   dbMartialArtsStudio.LogoUrl,
+		Name:      dbMartialArtsStudio.Name,
+		StudioUrl: dbMartialArtsStudio.StudioUrl,
 	}
 	return grpcMartialArtsStudio, nil
 }
@@ -363,4 +364,44 @@ func (f *FirestoreDB) GetOrganizationById(ctx context.Context, id string) (*grpc
 		grpcOrganization.LogoUrl = wrapperspb.String(dbOrganization.LogoUrl)
 	}
 	return grpcOrganization, nil
+}
+
+// Projects
+
+func (f *FirestoreDB) ListProjects(ctx context.Context) ([]*grpcEntity.Project, error) {
+	var grpcProjects []*grpcEntity.Project
+	iter := f.client.Collection(ProjectsCollection).Documents(ctx)
+	for {
+		projectDoc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		dbProject := &dbEntity.ProjectEntity{}
+		if err = projectDoc.DataTo(dbProject); err != nil {
+			return []*grpcEntity.Project{}, err
+		}
+		organization, err := f.GetOrganizationById(ctx, dbProject.Organization.ID)
+		if err != nil {
+			return []*grpcEntity.Project{}, err
+		}
+		grpcProject := &grpcEntity.Project{
+			Id:               "",
+			Description:      dbProject.Description,
+			Domains:          dbProject.Domains,
+			EndDate:          timestamppb.New(dbProject.EndDate),
+			MediaUrl:         dbProject.MediaUrl,
+			Name:             dbProject.Name,
+			Organization:     organization,
+			Responsibilities: dbProject.Responsibilities,
+			Skills:           dbProject.Skills,
+			SkillTypes:       dbProject.SkillTypes,
+			StartDate:        timestamppb.New(dbProject.StartDate),
+			ProjectUrls:      dbProject.ProjectUrls,
+		}
+		if dbProject.Disclaimer != "" {
+			grpcProject.Disclaimer = wrapperspb.String(dbProject.Disclaimer)
+		}
+		grpcProjects = append(grpcProjects, grpcProject)
+	}
+	return grpcProjects, nil
 }
