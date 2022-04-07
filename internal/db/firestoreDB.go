@@ -22,6 +22,7 @@ const (
 	MartialArtsStudiosCollection      = "martialArtsStudios"
 	MartialArtsStylesCollection       = "martialArtsStyles"
 	MusicInstrumentsCollection        = "musicInstruments"
+	MusicScoresCollection             = "musicScores"
 	OrganizationsCollection           = "organizations"
 	StudentOrganizationsSubCollection = "studentOrganizations"
 )
@@ -316,6 +317,30 @@ func (f *FirestoreDB) ListMusicInstruments(ctx context.Context) ([]*grpcEntity.I
 		grpcInstruments = append(grpcInstruments, grpcInstrument)
 	}
 	return grpcInstruments, nil
+}
+
+func (f *FirestoreDB) ListMusicScores(ctx context.Context) ([]*grpcEntity.MusicScore, error) {
+	var grpcMusicScores []*grpcEntity.MusicScore
+	iter := f.client.Collection(MusicScoresCollection).Documents(ctx)
+	for {
+		musicScoreDoc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		dbMusicScore := &dbEntity.MusicScoreEntity{}
+		if err = musicScoreDoc.DataTo(dbMusicScore); err != nil {
+			return []*grpcEntity.MusicScore{}, err
+		}
+		grpcMusicScore := &grpcEntity.MusicScore{
+			Id:       musicScoreDoc.Ref.ID,
+			Date:     timestamppb.New(dbMusicScore.Date),
+			Name:     dbMusicScore.Name,
+			Sections: dbMusicScore.Sections,
+			TrackUrl: dbMusicScore.TrackUrl,
+		}
+		grpcMusicScores = append(grpcMusicScores, grpcMusicScore)
+	}
+	return grpcMusicScores, nil
 }
 
 // Organizations

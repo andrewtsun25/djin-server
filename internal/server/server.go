@@ -111,8 +111,14 @@ func (s *djinServiceServerImpl) ListInstruments(ctx context.Context, _ *rpc.List
 	}, nil
 }
 
-func (s *djinServiceServerImpl) ListMusicScores(ctx context.Context, req *rpc.ListMusicScoresRequest) (*rpc.ListMusicScoresResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListMusicScores not implemented")
+func (s *djinServiceServerImpl) ListMusicScores(ctx context.Context, _ *rpc.ListMusicScoresRequest) (*rpc.ListMusicScoresResponse, error) {
+	musicScores, err := s.firestoreDB.ListMusicScores(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.ListMusicScoresResponse{
+		MusicScores: musicScores,
+	}, nil
 }
 
 // Organizations

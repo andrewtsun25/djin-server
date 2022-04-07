@@ -93,6 +93,12 @@ func clientRun() error {
 	}
 	log.Printf("[ListInstruments] Music Instruments : %v\n\n", listInstrumentsResponse)
 
+	listMusicScoresResponse, err := djinServiceClient.ListMusicScores(ctx, &rpc.ListMusicScoresRequest{})
+	if err != nil {
+		return fmt.Errorf("[ListMusicScores] Failed to list music scores: %w\n\n", err)
+	}
+	log.Printf("[ListMusicScores] Music Scores : %v\n\n", listMusicScoresResponse)
+
 	// Organizations
 	getOrganizationByIdResponse, err := djinServiceClient.GetOrganizationById(ctx, &rpc.GetOrganizationByIdRequest{
 		Id: "amazon",
