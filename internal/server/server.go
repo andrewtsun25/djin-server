@@ -6,8 +6,6 @@ import (
 	rpc "go.buf.build/grpc/go/andrewtsun25/djin/proto/dev/djin/rpc/v1"
 	service "go.buf.build/grpc/go/andrewtsun25/djin/proto/dev/djin/service/v1"
 	"google.golang.org/api/option"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
 
 type djinServiceServerImpl struct {
@@ -29,6 +27,100 @@ func (s *djinServiceServerImpl) Close() error {
 	return s.firestoreDB.Close()
 }
 
+// Educations
+
+func (s *djinServiceServerImpl) ListEducationsByType(ctx context.Context, req *rpc.ListEducationsByTypeRequest) (*rpc.ListEducationsByTypeResponse, error) {
+	educations, err := s.firestoreDB.ListEducationsByType(ctx, req.GetEducationType())
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.ListEducationsByTypeResponse{
+		Educations: educations,
+	}, nil
+}
+
+// Employments
+
+func (s *djinServiceServerImpl) ListEmployments(ctx context.Context, _ *rpc.ListEmploymentsRequest) (*rpc.ListEmploymentsResponse, error) {
+	employments, err := s.firestoreDB.ListEmployments(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.ListEmploymentsResponse{
+		Employments: employments,
+	}, nil
+}
+
+// HBV Research Papers
+
+func (s *djinServiceServerImpl) ListHbvResearchPapers(ctx context.Context, _ *rpc.ListHbvResearchPapersRequest) (*rpc.ListHbvResearchPapersResponse, error) {
+	hbvResearchPapers, err := s.firestoreDB.ListHbvResearchPapers(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.ListHbvResearchPapersResponse{
+		HbvResearchPapers: hbvResearchPapers,
+	}, nil
+}
+
+// Holistic Office
+
+func (s *djinServiceServerImpl) ListHolisticOfficeLinks(ctx context.Context, _ *rpc.ListHolisticOfficeLinksRequest) (*rpc.ListHolisticOfficeLinksResponse, error) {
+	holisticOfficeLinks, err := s.firestoreDB.ListHolisticOfficeLinks(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.ListHolisticOfficeLinksResponse{
+		HolisticOfficeLinks: holisticOfficeLinks,
+	}, nil
+}
+
+func (s *djinServiceServerImpl) ListHolisticOfficeModules(ctx context.Context, _ *rpc.ListHolisticOfficeModulesRequest) (*rpc.ListHolisticOfficeModulesResponse, error) {
+	holisticOfficeModules, err := s.firestoreDB.ListHolisticOfficeModules(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.ListHolisticOfficeModulesResponse{
+		HolisticOfficeModules: holisticOfficeModules,
+	}, nil
+}
+
+// Martial Arts
+
+func (s *djinServiceServerImpl) GetMartialArtsStyleById(ctx context.Context, req *rpc.GetMartialArtsStyleByIdRequest) (*rpc.GetMartialArtsStyleByIdResponse, error) {
+	martialArtsStyle, err := s.firestoreDB.GetMartialArtsStyleById(ctx, req.GetId())
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.GetMartialArtsStyleByIdResponse{
+		MartialArtsStyle: martialArtsStyle,
+	}, nil
+}
+
+// Music
+
+func (s *djinServiceServerImpl) ListMusicInstruments(ctx context.Context, _ *rpc.ListMusicInstrumentsRequest) (*rpc.ListMusicInstrumentsResponse, error) {
+	instruments, err := s.firestoreDB.ListMusicInstruments(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.ListMusicInstrumentsResponse{
+		Instruments: instruments,
+	}, nil
+}
+
+func (s *djinServiceServerImpl) ListMusicScores(ctx context.Context, _ *rpc.ListMusicScoresRequest) (*rpc.ListMusicScoresResponse, error) {
+	musicScores, err := s.firestoreDB.ListMusicScores(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.ListMusicScoresResponse{
+		MusicScores: musicScores,
+	}, nil
+}
+
+// Organizations
+
 func (s *djinServiceServerImpl) GetOrganizationById(ctx context.Context, req *rpc.GetOrganizationByIdRequest) (*rpc.GetOrganizationByIdResponse, error) {
 	organization, err := s.firestoreDB.GetOrganizationById(ctx, req.GetId())
 	if err != nil {
@@ -39,30 +131,14 @@ func (s *djinServiceServerImpl) GetOrganizationById(ctx context.Context, req *rp
 	}, nil
 }
 
-func (s *djinServiceServerImpl) ListEducationsByType(ctx context.Context, req *rpc.ListEducationsByTypeRequest) (*rpc.ListEducationsByTypeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListEducationsByType not implemented")
-}
-func (s *djinServiceServerImpl) ListEmployments(ctx context.Context, req *rpc.ListEmploymentsRequest) (*rpc.ListEmploymentsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListEmployments not implemented")
-}
-func (s *djinServiceServerImpl) ListHbvResearchPapers(ctx context.Context, req *rpc.ListHbvResearchPapersRequest) (*rpc.ListHbvResearchPapersResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListHbvResearchPapers not implemented")
-}
-func (s *djinServiceServerImpl) ListHolisticOfficeLinks(ctx context.Context, req *rpc.ListHolisticOfficeLinksRequest) (*rpc.ListHolisticOfficeLinksResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListHolisticOfficeLinks not implemented")
-}
-func (s *djinServiceServerImpl) ListHolisticOfficeModules(ctx context.Context, req *rpc.ListHolisticOfficeModulesRequest) (*rpc.ListHolisticOfficeModulesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListHolisticOfficeModules not implemented")
-}
-func (s *djinServiceServerImpl) GetMartialArtsStyleById(ctx context.Context, req *rpc.GetMartialArtsStyleByIdRequest) (*rpc.GetMartialArtsStyleByIdResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetMartialArtsStyleById not implemented")
-}
-func (s *djinServiceServerImpl) ListInstruments(ctx context.Context, req *rpc.ListInstrumentsRequest) (*rpc.ListInstrumentsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListInstruments not implemented")
-}
-func (s *djinServiceServerImpl) ListMusicScores(ctx context.Context, req *rpc.ListMusicScoresRequest) (*rpc.ListMusicScoresResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListMusicScores not implemented")
-}
-func (s *djinServiceServerImpl) ListProjects(ctx context.Context, req *rpc.ListProjectsRequest) (*rpc.ListProjectsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListProjects not implemented")
+// Projects
+
+func (s *djinServiceServerImpl) ListProjects(ctx context.Context, _ *rpc.ListProjectsRequest) (*rpc.ListProjectsResponse, error) {
+	projects, err := s.firestoreDB.ListProjects(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &rpc.ListProjectsResponse{
+		Projects: projects,
+	}, nil
 }
