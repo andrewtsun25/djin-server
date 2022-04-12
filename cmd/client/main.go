@@ -87,11 +87,11 @@ func clientRun() error {
 	}
 
 	// Music
-	listInstrumentsResponse, err := djinServiceClient.ListInstruments(ctx, &rpc.ListInstrumentsRequest{})
+	listMusicInstrumentsResponse, err := djinServiceClient.ListMusicInstruments(ctx, &rpc.ListMusicInstrumentsRequest{})
 	if err != nil {
-		return fmt.Errorf("[ListInstruments] Failed to list music instruments: %w\n\n", err)
+		return fmt.Errorf("[ListMusicInstruments] Failed to list music instruments: %w\n\n", err)
 	}
-	log.Printf("[ListInstruments] Music Instruments : %v\n\n", listInstrumentsResponse)
+	log.Printf("[ListMusicInstruments] Music Instruments : %v\n\n", listMusicInstrumentsResponse)
 
 	listMusicScoresResponse, err := djinServiceClient.ListMusicScores(ctx, &rpc.ListMusicScoresRequest{})
 	if err != nil {

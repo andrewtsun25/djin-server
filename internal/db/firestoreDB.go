@@ -298,8 +298,8 @@ func (f *FirestoreDB) GetMartialArtsStudioById(ctx context.Context, id string) (
 
 // Music
 
-func (f *FirestoreDB) ListMusicInstruments(ctx context.Context) ([]*grpcEntity.Instrument, error) {
-	var grpcInstruments []*grpcEntity.Instrument
+func (f *FirestoreDB) ListMusicInstruments(ctx context.Context) ([]*grpcEntity.MusicInstrument, error) {
+	var grpcInstruments []*grpcEntity.MusicInstrument
 	iter := f.client.Collection(MusicInstrumentsCollection).Documents(ctx)
 	for {
 		musicInstrumentDoc, err := iter.Next()
@@ -308,12 +308,13 @@ func (f *FirestoreDB) ListMusicInstruments(ctx context.Context) ([]*grpcEntity.I
 		}
 		dbMusicInstrument := &dbEntity.MusicInstrumentEntity{}
 		if err = musicInstrumentDoc.DataTo(dbMusicInstrument); err != nil {
-			return []*grpcEntity.Instrument{}, err
+			return []*grpcEntity.MusicInstrument{}, err
 		}
-		grpcInstrument := &grpcEntity.Instrument{
+		grpcInstrument := &grpcEntity.MusicInstrument{
 			Id:       musicInstrumentDoc.Ref.ID,
 			MediaUrl: dbMusicInstrument.MediaUrl,
 			Name:     dbMusicInstrument.Name,
+			Type:     dbMusicInstrument.Type,
 		}
 		grpcInstruments = append(grpcInstruments, grpcInstrument)
 	}

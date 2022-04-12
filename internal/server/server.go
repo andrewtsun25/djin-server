@@ -99,12 +99,12 @@ func (s *djinServiceServerImpl) GetMartialArtsStyleById(ctx context.Context, req
 
 // Music
 
-func (s *djinServiceServerImpl) ListInstruments(ctx context.Context, _ *rpc.ListInstrumentsRequest) (*rpc.ListInstrumentsResponse, error) {
+func (s *djinServiceServerImpl) ListMusicInstruments(ctx context.Context, _ *rpc.ListMusicInstrumentsRequest) (*rpc.ListMusicInstrumentsResponse, error) {
 	instruments, err := s.firestoreDB.ListMusicInstruments(ctx)
 	if err != nil {
 		return nil, err
 	}
-	return &rpc.ListInstrumentsResponse{
+	return &rpc.ListMusicInstrumentsResponse{
 		Instruments: instruments,
 	}, nil
 }
@@ -133,7 +133,7 @@ func (s *djinServiceServerImpl) GetOrganizationById(ctx context.Context, req *rp
 
 // Projects
 
-func (s *djinServiceServerImpl) ListProjects(ctx context.Context, req *rpc.ListProjectsRequest) (*rpc.ListProjectsResponse, error) {
+func (s *djinServiceServerImpl) ListProjects(ctx context.Context, _ *rpc.ListProjectsRequest) (*rpc.ListProjectsResponse, error) {
 	projects, err := s.firestoreDB.ListProjects(ctx)
 	if err != nil {
 		return nil, err

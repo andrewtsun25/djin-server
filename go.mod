@@ -5,7 +5,7 @@ go 1.18
 require (
 	cloud.google.com/go/firestore v1.6.1
 	firebase.google.com/go v3.13.0+incompatible
-	go.buf.build/grpc/go/andrewtsun25/djin v1.3.7
+	go.buf.build/grpc/go/andrewtsun25/djin v1.3.8
 	google.golang.org/api v0.73.0
 	google.golang.org/grpc v1.45.0
 	google.golang.org/protobuf v1.28.0
